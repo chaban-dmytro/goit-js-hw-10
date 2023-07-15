@@ -8,7 +8,7 @@ const selectInputEl = document.querySelector( '.breed-select' );
 const catItemEl = document.querySelector( '.cat-info' );
 const loaderEl = document.querySelector( '.loader' );
 
-selectInputEl.addEventListener( 'input', checkInput );
+selectInputEl.addEventListener( 'change', checkInput );
 
 let allCatsArray = {};
 
@@ -16,7 +16,12 @@ fetchBreeds().then( data => {
   allCatsArray = data;
   getValuesToInput( allCatsArray );
   loaderEl.classList.add( 'hidden' );
-} ).catch( err => Notiflix.Notify.failure('Oops! Something went wrong! Try reloading the page!') );
+} ).catch( err => {
+  Notiflix.Notify.failure( 'Oops! Something went wrong! Try reloading the page!' );
+  selectInputEl.innerHTML = `<option value='noInfo'>No info from server</option>`
+  loaderEl.classList.add( 'hidden' );
+}
+);
 
 function getValuesToInput( array ) {
   let markup = [];
@@ -24,19 +29,27 @@ function getValuesToInput( array ) {
     markup.push(`<option value=${element.id}>${element.name}</option>`)
   } );
   selectInputEl.innerHTML = markup.join( ' ' );
-  // new SlimSelect({
-  //   select: selectInputEl
-  // } )
+  addSlimSelect();
+}
+
+function addSlimSelect() {
+  new SlimSelect({
+    select: '#selectElement'
+  })
 }
 
 function checkInput( event ) {
   loaderEl.classList.remove( 'hidden' );
-  fetchCatByBreed(event.target.value)
+  fetchCatByBreed( event.target.value )
     .then( data => {
       let dataInfo = data[0].breeds[0];
-      createCatMarkup( data, dataInfo );     
+      createCatMarkup( data, dataInfo );
       loaderEl.classList.add( 'hidden' );
-} ).catch( err => Notiflix.Notify.failure('Oops! Something went wrong! Try reloading the page!') );
+    } ).catch( err => {
+      Notiflix.Notify.failure( 'Oops! Something went wrong! Try reloading the page!' );
+      catItemEl.innerHTML = '';
+      loaderEl.classList.add( 'hidden' );
+    } );
 }
 
 function createCatMarkup(data, dataInfo) {

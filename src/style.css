@@ -1,6 +1,9 @@
 body {
   font-family: 'Montserrat', sans-serif;
   font-weight: 400;
+  max-width: 1200px;
+  padding: 20px;
+  margin: 0 auto;
 }
 
 /* // LOADER // */
@@ -64,13 +67,6 @@ body {
 }
 
 /* // LOADER // */
-
-.container {
-  max-width: 1200px;
-  width: 100%;
-  padding: 20px;
-  margin: 0 auto;
-}
 
 .hidden {
   display: none;
